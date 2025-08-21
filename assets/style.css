@@ -11,18 +11,21 @@ figure{margin:0}
 .container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
 
 header{position:sticky;top:0;background:#fff;border-bottom:1px solid #eee;z-index:10}
-nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem 0}
+nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem 0;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
 .brand .logo{width:34px;height:34px;display:inline-block;object-fit:contain;border-radius:0;vertical-align:middle;background:transparent}
 .brand .mark{display:none}
-.navlinks{display:flex;gap:.4rem .8rem;flex-wrap:wrap}
-.navlinks a{padding:.45rem .7rem;border-radius:10px;text-decoration:none}
+.navlinks{display:flex;gap:.4rem .6rem;flex-wrap:wrap}
+.navlinks a{padding:.35rem .6rem;border-radius:8px;text-decoration:none}
 .navlinks a[aria-current="page"],.navlinks a:hover{background:#f2f2f7}
 
+/* HERO avec image en fond (sans voile) */
 .hero{background:url("/assets/img/luce-camaret.webp") center/cover no-repeat;border-bottom:1px solid #eee}
-.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;padding:3rem 0}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;padding:3rem 0;min-height:60vh}
 .hero figure img{display:none}
 
+/* Carte de texte (vide sur desktop, visible en mobile) */
+.intro{background:transparent;border-radius:12px}
 h1{font-size:clamp(1.6rem,2vw + 1.2rem,2.4rem);line-height:1.2;margin:.5rem 0}
 .lead{font-size:1.05rem;color:#333;margin:.5rem 0 1rem}
 
@@ -41,9 +44,35 @@ footer{border-top:1px solid #eee;background:#fafafa;padding:2rem 0;font-size:.95
 small,.muted{color:#666}
 ul{padding-left:1.2rem}
 
+/* TABLETTES */
 @media (max-width:860px){
-  .hero .wrap{grid-template-columns:1fr}
+  .hero .wrap{grid-template-columns:1fr;padding:2.25rem 0}
 }
 
+/* MOBILES étroits (iPhone) */
+@media (max-width:600px){
+  /* nav sur 2 lignes propre */
+  .navlinks{order:2;width:100%;justify-content:space-between;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .navlinks a{display:inline-block;font-size:.95rem;padding:.35rem .55rem}
+
+  /* image de fond, centrage haut */
+  .hero{background-position:center top}
+  .hero .wrap{gap:1.25rem;min-height:70vh}
+
+  /* lisibilité du texte sans voile global : petite carte sous le texte */
+  .intro{background:rgba(255,255,255,.86);backdrop-filter:saturate(120%) blur(2px);padding:12px;border:1px solid rgba(0,0,0,.06)}
+  h1{font-size:clamp(1.4rem,6.4vw,2rem)}
+  .lead{font-size:1rem}
+
+  /* boutons empilés en pleine largeur */
+  .btns{flex-direction:column;align-items:stretch}
+  .btn,.btn.primary{width:100%;text-align:center}
+}
+
+/* très petits écrans */
+@media (max-width:380px){
+  .navlinks a{font-size:.9rem}
+  .intro{padding:10px}
+}
 .card figure{margin:0 0 .6rem 0}
 .card .thumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#f3f4f6}
