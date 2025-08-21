@@ -14,8 +14,6 @@
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/quai-kleber.html">
 <meta name="description" content="15–16 quai Kléber : une parcelle à très forte valeur patrimoniale, témoin continu des activités portuaires de Camaret-sur-Mer depuis le XVIIIe siècle.">
-
-<!-- Leaflet (CSS/JS) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
@@ -39,14 +37,13 @@
   <div class="container">
     <h1>15–16 quai Kléber — une parcelle patrimoniale</h1>
 
-    <!-- Bloc texte + image côte à côte -->
     <div class="intro-split">
       <div>
         <p>Le site pressenti pour le futur MuCam correspond à un ensemble bâti à très forte valeur patrimoniale. Occupé sans discontinuer par des activités liées au port depuis le XVIII<sup>e</sup> siècle, il constitue un témoin rare de l’histoire industrielle et sociale de Camaret-sur-Mer.</p>
       </div>
       <figure class="inline-figure">
-        <img src="/assets/img/dessinarturo.png" alt="Quai Kléber — dessin d’Arturo Villaamil, 2025" loading="lazy" width="1072" height="768">
-        <figcaption class="caption muted">Quai Kléber, Arturo Villaamil, 2025</figcaption>
+        <img src="/assets/img/dessinarturo.jpg" alt="Quai Kléber — dessin d’Arturo Villaamil, 2025" loading="lazy" width="1072" height="768">
+        <figcaption class="muted">Quai Kléber, Arturo Villaamil, 2025</figcaption>
       </figure>
     </div>
 
@@ -104,7 +101,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var map = L.map('map', {scrollWheelZoom:true});
-  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
   }).addTo(map);
@@ -112,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function(){
   map.setView([48.275235, -4.594136], 19);
 
   var ids = [53972202, 53972256];
-
   var query = `
     [out:json][timeout:25];
     (
@@ -122,53 +118,22 @@ document.addEventListener('DOMContentLoaded', function(){
   `;
 
   fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query))
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      var bounds = null;
-      var group = L.layerGroup().addTo(map);
-
-      (data.elements || []).forEach(function(el){
-        if (el.type === 'way' && el.geometry) {
-          var latlngs = el.geometry.map(function(pt){ return [pt.lat, pt.lon]; });
-          var poly = L.polygon(latlngs, {
-            color:'#0a84ff',
-            weight:3,
-            opacity:0.9,
-            fillColor:'#0a84ff',
-            fillOpacity:0.18
-          }).addTo(group);
-
-          var osmLink = 'https://www.openstreetmap.org/way/' + el.id;
-          var label = (el.tags && (el.tags.name || el.tags['addr:housename'])) ? el.tags.name || el.tags['addr:housename'] : 'Bâtiment';
-          var popupHtml = '<strong>' + label + '</strong><br>OSM ID : ' + el.id + '<br><a href="'+osmLink+'" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>';
-          poly.bindPopup(popupHtml);
-
-          var llb = L.latLngBounds(latlngs);
-          bounds = bounds ? bounds.extend(llb) : llb;
+    .then(r=>r.json())
+    .then(data=>{
+      var bounds=null, group=L.layerGroup().addTo(map);
+      (data.elements||[]).forEach(el=>{
+        if(el.type==='way' && el.geometry){
+          var latlngs=el.geometry.map(pt=>[pt.lat,pt.lon]);
+          var poly=L.polygon(latlngs,{color:'#0a84ff',weight:3,opacity:.9,fillColor:'#0a84ff',fillOpacity:.18}).addTo(group);
+          var link='https://www.openstreetmap.org/way/'+el.id;
+          var label=(el.tags&&(el.tags.name||el.tags['addr:housename']))?(el.tags.name||el.tags['addr:housename']):'Bâtiment';
+          poly.bindPopup('<strong>'+label+'</strong><br>OSM ID : '+el.id+'<br><a href="'+link+'" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>');
+          var llb=L.latLngBounds(latlngs); bounds=bounds?bounds.extend(llb):llb;
         }
       });
-
-      if (bounds) map.fitBounds(bounds.pad(0.2));
+      if(bounds) map.fitBounds(bounds.pad(.2));
     })
-    .catch(function(err){
-      console.error('Overpass error', err);
-      // Si besoin, remplacez l’URL par : https://overpass.kumi.systems/api/interpreter
-    });
-
-  var Recenter = L.Control.extend({
-    onAdd: function(){
-      var btn = L.DomUtil.create('button');
-      btn.textContent = 'Recentrer';
-      btn.style.cssText = 'background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:.35rem .6rem;box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer';
-      btn.title = 'Revenir sur les bâtiments';
-      L.DomEvent.on(btn,'click',function(){
-        map.setView([48.275235, -4.594136], 19);
-      });
-      return btn;
-    },
-    onRemove: function(){}
-  });
-  map.addControl(new Recenter({ position:'topleft' }));
+    .catch(err=>console.error('Overpass error',err));
 });
 </script>
 </body>
