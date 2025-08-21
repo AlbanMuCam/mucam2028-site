@@ -95,7 +95,6 @@
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', async function(){
-  // Instancie la carte si l'élément existe
   const mapEl = document.getElementById('map');
   if (!mapEl || typeof L === 'undefined') return;
 
@@ -107,12 +106,12 @@ document.addEventListener('DOMContentLoaded', async function(){
   }).addTo(map);
   map.setView([48.275235, -4.594136], 19);
 
-  // 2) Pane dédié : garantit que les polygones restent au-dessus
+  // 2) Pane dédié pour que la surbrillance reste au-dessus
   map.createPane('highlight');
   map.getPane('highlight').style.zIndex = 650;
 
-  // 3) IDs OSM et requête Overpass
-  const ids = [53972202, 53972256]; // tes deux bâtiments
+  // 3) IDs OSM + requête Overpass (géométrie complète)
+  const ids = [53972202, 53972256];
   const query = `
     [out:json][timeout:35];
     (
@@ -121,23 +120,28 @@ document.addEventListener('DOMContentLoaded', async function(){
     out tags geom;
   `;
 
-  // 4) Deux endpoints Overpass (bascule automatique si le 1er est lent)
+  // 4) Fallback multi-endpoints + petites relances
   const endpoints = [
-    'https://overpass-api.de/api/interpreter',
-    'https://overpass.kumi.systems/api/interpreter'
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass-api.de/api/interpreter'
   ];
 
   async function fetchOverpass() {
     let lastErr;
     for (const base of endpoints) {
-      try {
-        const res = await fetch(base + '?data=' + encodeURIComponent(query), { cache:'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        if (data && data.elements && data.elements.length) return data;
-      } catch (e) {
-        lastErr = e;
-        console.warn('Overpass indisponible sur', base, e);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const url = base + '?data=' + encodeURIComponent(query) + '&_t=' + Date.now();
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data && Array.isArray(data.elements) && data.elements.length) return data;
+          throw new Error('Réponse Overpass vide');
+        } catch (e) {
+          lastErr = e;
+          // petit backoff avant de réessayer
+          await new Promise(r => setTimeout(r, 600 * (attempt + 1)));
+        }
       }
     }
     throw lastErr || new Error('Overpass indisponible');
@@ -151,29 +155,30 @@ document.addEventListener('DOMContentLoaded', async function(){
       if (el.type === 'way' && Array.isArray(el.geometry)) {
         const latlngs = el.geometry.map(pt => [pt.lat, pt.lon]);
 
-        // Style de surbrillance bien visible
+        // Surbrillance visible (orange)
         const poly = L.polygon(latlngs, {
           pane: 'highlight',
-          color: '#ff6b00',      // contour orange
+          color: '#ff6b00',      // contour
           weight: 4,
           opacity: 1,
-          fillColor: '#ff6b00',  // remplissage orange
-          fillOpacity: 0.28
+          fillColor: '#ff6b00',  // remplissage
+          fillOpacity: 0.35
         }).addTo(group);
 
-        // Popup
-        const link = 'https://www.openstreetmap.org/way/' + el.id;
+        const link  = 'https://www.openstreetmap.org/way/' + el.id;
         const label = (el.tags && (el.tags.name || el.tags['addr:housename']))
                       ? (el.tags.name || el.tags['addr:housename'])
                       : 'Bâtiment';
-        poly.bindPopup('<strong>' + label + '</strong><br>OSM ID : ' + el.id +
-                       '<br><a href="' + link + '" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>');
+        poly.bindPopup(
+          '<strong>' + label + '</strong>' +
+          '<br>OSM ID&nbsp;: ' + el.id +
+          '<br><a href="' + link + '" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>'
+        );
 
-        // Calcul des bornes pour le zoom
         const llb = L.latLngBounds(latlngs);
         bounds = bounds ? bounds.extend(llb) : llb;
 
-        // Assure la priorité d’affichage
+        // priorité d’affichage
         setTimeout(() => poly.bringToFront(), 0);
       }
     });
@@ -185,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function(){
     const data = await fetchOverpass();
     drawWays(data);
   } catch (err) {
-    console.error('Impossible de charger les polygones OSM :', err);
+    console.error('Overpass error:', err);
   }
 });
 </script>
