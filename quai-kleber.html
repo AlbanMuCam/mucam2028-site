@@ -93,43 +93,100 @@
     </div>
   </div>
 </footer>
-
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-  var map = L.map('map', {scrollWheelZoom:true});
+document.addEventListener('DOMContentLoaded', async function(){
+  // Instancie la carte si l'élément existe
+  const mapEl = document.getElementById('map');
+  if (!mapEl || typeof L === 'undefined') return;
+
+  // 1) Carte de base
+  const map = L.map('map', { scrollWheelZoom: true });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
   }).addTo(map);
-
   map.setView([48.275235, -4.594136], 19);
 
-  var ids = [53972202, 53972256];
-  var query = `
-    [out:json][timeout:25];
+  // 2) Pane dédié : garantit que les polygones restent au-dessus
+  map.createPane('highlight');
+  map.getPane('highlight').style.zIndex = 650;
+
+  // 3) IDs OSM et requête Overpass
+  const ids = [53972202, 53972256]; // tes deux bâtiments
+  const query = `
+    [out:json][timeout:35];
     (
       way(${ids.join(',')});
     );
-    out body geom;
+    out tags geom;
   `;
 
-  fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query))
-    .then(r=>r.json())
-    .then(data=>{
-      var bounds=null, group=L.layerGroup().addTo(map);
-      (data.elements||[]).forEach(el=>{
-        if(el.type==='way' && el.geometry){
-          var latlngs=el.geometry.map(pt=>[pt.lat,pt.lon]);
-          var poly=L.polygon(latlngs,{color:'#0a84ff',weight:3,opacity:.9,fillColor:'#0a84ff',fillOpacity:.18}).addTo(group);
-          var link='https://www.openstreetmap.org/way/'+el.id;
-          var label=(el.tags&&(el.tags.name||el.tags['addr:housename']))?(el.tags.name||el.tags['addr:housename']):'Bâtiment';
-          poly.bindPopup('<strong>'+label+'</strong><br>OSM ID : '+el.id+'<br><a href="'+link+'" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>');
-          var llb=L.latLngBounds(latlngs); bounds=bounds?bounds.extend(llb):llb;
-        }
-      });
-      if(bounds) map.fitBounds(bounds.pad(.2));
-    })
-    .catch(err=>console.error('Overpass error',err));
+  // 4) Deux endpoints Overpass (bascule automatique si le 1er est lent)
+  const endpoints = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter'
+  ];
+
+  async function fetchOverpass() {
+    let lastErr;
+    for (const base of endpoints) {
+      try {
+        const res = await fetch(base + '?data=' + encodeURIComponent(query), { cache:'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data && data.elements && data.elements.length) return data;
+      } catch (e) {
+        lastErr = e;
+        console.warn('Overpass indisponible sur', base, e);
+      }
+    }
+    throw lastErr || new Error('Overpass indisponible');
+  }
+
+  function drawWays(data) {
+    const group = L.layerGroup().addTo(map);
+    let bounds = null;
+
+    (data.elements || []).forEach(el => {
+      if (el.type === 'way' && Array.isArray(el.geometry)) {
+        const latlngs = el.geometry.map(pt => [pt.lat, pt.lon]);
+
+        // Style de surbrillance bien visible
+        const poly = L.polygon(latlngs, {
+          pane: 'highlight',
+          color: '#ff6b00',      // contour orange
+          weight: 4,
+          opacity: 1,
+          fillColor: '#ff6b00',  // remplissage orange
+          fillOpacity: 0.28
+        }).addTo(group);
+
+        // Popup
+        const link = 'https://www.openstreetmap.org/way/' + el.id;
+        const label = (el.tags && (el.tags.name || el.tags['addr:housename']))
+                      ? (el.tags.name || el.tags['addr:housename'])
+                      : 'Bâtiment';
+        poly.bindPopup('<strong>' + label + '</strong><br>OSM ID : ' + el.id +
+                       '<br><a href="' + link + '" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>');
+
+        // Calcul des bornes pour le zoom
+        const llb = L.latLngBounds(latlngs);
+        bounds = bounds ? bounds.extend(llb) : llb;
+
+        // Assure la priorité d’affichage
+        setTimeout(() => poly.bringToFront(), 0);
+      }
+    });
+
+    if (bounds) map.fitBounds(bounds.pad(0.2));
+  }
+
+  try {
+    const data = await fetchOverpass();
+    drawWays(data);
+  } catch (err) {
+    console.error('Impossible de charger les polygones OSM :', err);
+  }
 });
 </script>
 </body>
