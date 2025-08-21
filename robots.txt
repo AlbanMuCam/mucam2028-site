@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mucam2028.bzh/sitemap.xml
