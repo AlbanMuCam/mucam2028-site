@@ -14,12 +14,18 @@
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/quai-kleber.html">
 <meta name="description" content="15–16 quai Kléber : une parcelle à très forte valeur patrimoniale, témoin continu des activités portuaires de Camaret-sur-Mer depuis le XVIIIe siècle.">
+
+<!-- Leaflet (CSS/JS) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <header>
   <div class="container">
     <nav aria-label="Navigation principale">
-      <a class="brand" href="/"><img class="head" src="/assets/img/head_mucam.png" alt="MuCam 2028"></a>
+      <a class="home" href="/" aria-label="Accueil">
+        <img src="/assets/img/head_mucam.png" alt="MuCam 2028">
+      </a>
       <div class="navlinks">
         <a href="/projet.html">Le projet</a>
         <a href="/quai-kleber.html" aria-current="page">15–16 quai Kléber</a>
@@ -62,6 +68,12 @@
 
     <h2>Et demain : place du MuCam</h2>
     <p>Le futur MuCam accueillerait le public et la médiation sur cette parcelle, au plus près des témoins matériels : parcours permanent, exposition temporaire, espaces de médiation, café–librairie–boutique, ainsi que des réserves adaptées aux collections.</p>
+
+    <h2>Voir la parcelle sur OpenStreetMap</h2>
+    <div class="map-wrap">
+      <div id="map" aria-label="Carte OpenStreetMap — 15–16 quai Kléber"></div>
+      <p class="map-legend muted">Données © contributeurs OpenStreetMap. Cliquez sur les polygones pour voir les informations et ouvrir l’objet dans OSM.</p>
+    </div>
   </div>
 </main>
 
@@ -78,5 +90,83 @@
     </div>
   </div>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var map = L.map('map', {scrollWheelZoom:true});
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+  }).addTo(map);
+
+  // Centre initial sur Camaret (ajusté après chargement des polygones)
+  map.setView([48.275235, -4.594136], 19);
+
+  // IDs OSM à mettre en avant
+  var ids = [53972202, 53972256];
+
+  // Requête Overpass: récupère la géométrie complète des ways
+  var query = `
+    [out:json][timeout:25];
+    (
+      way(${ids.join(',')});
+    );
+    out body geom;
+  `;
+
+  fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var bounds = null;
+      var group = L.layerGroup().addTo(map);
+
+      (data.elements || []).forEach(function(el){
+        if (el.type === 'way' && el.geometry) {
+          var latlngs = el.geometry.map(function(pt){ return [pt.lat, pt.lon]; });
+          // Si le polygone n'est pas fermé, Leaflet le fermera visuellement
+          var poly = L.polygon(latlngs, {
+            color:'#0a84ff',
+            weight:3,
+            opacity:0.9,
+            fillColor:'#0a84ff',
+            fillOpacity:0.18
+          }).addTo(group);
+
+          var osmLink = 'https://www.openstreetmap.org/way/' + el.id;
+          var label = (el.tags && (el.tags.name || el.tags['addr:housename'])) ? el.tags.name || el.tags['addr:housename'] : 'Bâtiment';
+          var popupHtml = '<strong>' + label + '</strong><br>OSM ID : ' + el.id + '<br><a href="'+osmLink+'" target="_blank" rel="noopener">Voir sur OpenStreetMap</a>';
+          poly.bindPopup(popupHtml);
+
+          if (!bounds) bounds = L.latLngBounds(latlngs);
+          else bounds.extend(L.latLngBounds(latlngs));
+        }
+      });
+
+      if (bounds) {
+        map.fitBounds(bounds.pad(0.2));
+      }
+    })
+    .catch(function(err){
+      console.error('Overpass error', err);
+    });
+
+  // Petit contrôle de recentrage
+  var Recenter = L.Control.extend({
+    onAdd: function(){
+      var btn = L.DomUtil.create('button');
+      btn.textContent = 'Recentrer';
+      btn.style.cssText = 'background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:.35rem .6rem;box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer';
+      btn.title = 'Revenir sur les bâtiments';
+      L.DomEvent.on(btn,'click',function(){
+        map.setView([48.275235, -4.594136], 19);
+      });
+      return btn;
+    },
+    onRemove: function(){}
+  });
+  var rc = new Recenter({ position:'topleft' });
+  map.addControl(rc);
+});
+</script>
 </body>
 </html>
