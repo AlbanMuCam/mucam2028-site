@@ -43,7 +43,7 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padd
 .navlinks a[aria-current="page"],.navlinks a:hover{background:#f2f2f7}
 
 /* HERO (page d’accueil) */
-.hero{background:url("/assets/img/luce-camaret.webp") center/cover no-repeat;border-bottom:1px solid #eee}
+.hero{background:url("/assets/img/frontphoto1.jpg") center/cover no-repeat;border-bottom:1px solid #eee}
 .hero .wrap{
   display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;
   padding-top:clamp(32px,7vw,72px);
