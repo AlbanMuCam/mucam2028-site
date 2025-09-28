@@ -14,23 +14,23 @@
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/participer.html">
 <meta name="description" content="Participer au futur MuCam : pré-adhérer en ligne, donner/mécéner, devenir bénévole.">
-
-<!-- Style léger spécifique au formulaire -->
 <style>
-/* Mise en forme douce du formulaire sans toucher au style global */
 .form-card{margin-top:1.25rem}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem 1rem}
 .form-grid .full{grid-column:1 / -1}
 fieldset{border:1px solid #eee;border-radius:12px;padding:0.9rem}
 legend{font-weight:700;padding:0 .3rem}
 label{display:block;margin:.35rem 0}
-input[type="text"],input[type="email"],input[type="tel"],textarea{
-  width:100%;padding:.6rem .7rem;border:1px solid #d0d7de;border-radius:10px;font:inherit
-}
+input[type="text"],input[type="email"],input[type="tel"],textarea{width:100%;padding:.6rem .7rem;border:1px solid #d0d7de;border-radius:10px;font:inherit}
 textarea{min-height:110px;resize:vertical}
 .help{font-size:.92rem;color:#666;margin:.4rem 0 0}
 .required::after{content:" *";color:#c0392b}
 .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
+.alert{border-radius:10px;padding:.75rem 1rem;margin:.8rem 0}
+.alert.success{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+.alert.error{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d}
+.hidden{display:none}
+.hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
 @media (max-width:720px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -78,14 +78,16 @@ textarea{min-height:110px;resize:vertical}
       </div>
     </div>
 
-    <!-- FORMULAIRE DE PRE-ADHESION -->
     <h2 id="pre-adhesion" style="margin-top:2rem">Pré-adhésion en ligne</h2>
     <div class="card form-card">
-      <p class="muted">Envoi par e-mail&nbsp;: un brouillon s’ouvrira dans votre messagerie avec vos réponses préremplies, adressé à <strong>mucam@postel.bzh</strong>.</p>
+      <p class="muted">Vos réponses sont envoyées et transmises par e-mail à <strong>mucam@postel.bzh</strong>.</p>
 
-      <form id="preForm">
+      <form id="preForm" action="https://formspree.io/f/xwprvzop" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Pré-adhésion MuCam2028">
+        <input type="hidden" name="_language" value="fr">
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off">
+
         <div class="form-grid">
-          <!-- Coordonnées -->
           <div class="full"><h3>Coordonnées</h3></div>
           <div>
             <label for="nom" class="required">Nom</label>
@@ -97,7 +99,7 @@ textarea{min-height:110px;resize:vertical}
           </div>
           <div class="full">
             <label for="adresse">Adresse postale</label>
-            <input type="text" id="adresse" name="Adresse postale" placeholder="">
+            <input type="text" id="adresse" name="Adresse postale">
           </div>
           <div>
             <label for="email" class="required">Adresse e-mail</label>
@@ -108,7 +110,6 @@ textarea{min-height:110px;resize:vertical}
             <input type="tel" id="tel" name="Téléphone">
           </div>
 
-          <!-- Souhaits principaux -->
           <div class="full">
             <fieldset>
               <legend>Souhaitez-vous</legend>
@@ -118,7 +119,6 @@ textarea{min-height:110px;resize:vertical}
             </fieldset>
           </div>
 
-          <!-- Mode de communication -->
           <div class="full">
             <fieldset>
               <legend>Mode de communication préféré</legend>
@@ -128,7 +128,6 @@ textarea{min-height:110px;resize:vertical}
             </fieldset>
           </div>
 
-          <!-- Groupes de travail -->
           <div class="full">
             <fieldset>
               <legend>Groupes de travail (cochez une ou plusieurs cases)</legend>
@@ -146,7 +145,6 @@ textarea{min-height:110px;resize:vertical}
             </fieldset>
           </div>
 
-          <!-- Campagne citoyenne -->
           <div class="full">
             <fieldset>
               <legend>Campagne citoyenne pour l’achat de la parcelle</legend>
@@ -157,7 +155,6 @@ textarea{min-height:110px;resize:vertical}
             </fieldset>
           </div>
 
-          <!-- Partage d’objet / témoignage -->
           <div class="full">
             <fieldset>
               <legend>Partage (objet, photo, souvenir, savoir-faire…)</legend>
@@ -172,22 +169,24 @@ textarea{min-height:110px;resize:vertical}
           </div>
 
           <div class="full btn-row">
-            <button type="submit" class="btn primary">Envoyer ma pré-adhésion</button>
+            <button type="submit" class="btn primary" id="submitBtn">Envoyer ma pré-adhésion</button>
             <button type="reset" class="btn">Effacer</button>
           </div>
+
           <div class="full">
-            <p class="help">* Champs obligatoires. Aucune donnée n’est stockée sur le site&nbsp;: vos réponses sont envoyées par e-mail à <strong>mucam@postel.bzh</strong>.</p>
+            <div id="formSuccess" class="alert success hidden" role="status">Merci ! Votre pré-adhésion a bien été envoyée.</div>
+            <div id="formError" class="alert error hidden" role="alert">L’envoi a échoué. Vérifiez votre connexion et réessayez.</div>
+            <p class="help">* Champs obligatoires. Données traitées par l’équipe du projet MuCam2028.</p>
           </div>
         </div>
       </form>
 
       <noscript>
-        <p class="help">JavaScript est désactivé. Envoyez vos réponses à
+        <p class="help">JavaScript est désactivé. Vous pouvez écrire à
           <a href="mailto:mucam@postel.bzh?subject=Pr%C3%A9-adh%C3%A9sion%20MuCam2028">mucam@postel.bzh</a>.
         </p>
       </noscript>
     </div>
-    <!-- /FORMULAIRE -->
   </div>
 </main>
 
@@ -205,70 +204,25 @@ textarea{min-height:110px;resize:vertical}
   </div>
 </footer>
 
-<!-- Script : construit un e-mail prérempli vers mucam@postel.bzh -->
 <script>
 (function(){
-  function getCheckedValues(name){
-    return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(i=>i.value);
-  }
-  function line(label, value){
-    if(!value || (Array.isArray(value) && value.length===0)) return "";
-    if(Array.isArray(value)) value = value.join(", ");
-    return label + ": " + value + "\\n";
-  }
-
-  document.getElementById('preForm').addEventListener('submit', function(e){
-    e.preventDefault();
-
-    // Champs requis simples
-    var nom = document.getElementById('nom').value.trim();
-    var prenom = document.getElementById('prenom').value.trim();
-    var email = document.getElementById('email').value.trim();
-    if(!nom || !prenom || !email){
-      alert("Merci de renseigner au minimum Nom, Prénom et E-mail.");
-      return;
-    }
-
-    // Récupération des valeurs
-    var adresse = document.getElementById('adresse').value.trim();
-    var tel = document.getElementById('tel').value.trim();
-    var souhaits = getCheckedValues("Souhaits");
-    var comm = getCheckedValues("Communication");
-    var groupes = getCheckedValues("Groupes");
-    var camp = getCheckedValues("Campagne citoyenne");
-    var partageDesc = document.getElementById('partage-desc').value.trim();
-    var partageSouhait = getCheckedValues("Partage — souhait");
-
-    // Corps de l’e-mail
-    var body =
-      "Pré-adhésion en ligne — MuCam2028\\n" +
-      "----------------------------------\\n" +
-      line("Nom", nom) +
-      line("Prénom", prenom) +
-      line("E-mail", email) +
-      line("Téléphone", tel) +
-      line("Adresse postale", adresse) +
-      "\\n" +
-      line("Souhaitez-vous", souhaits) +
-      line("Mode de communication préféré", comm) +
-      line("Groupes de travail", groupes) +
-      "\\n" +
-      "Campagne citoyenne pour l’achat de la parcelle\\n" +
-      line("— Engagement", camp) +
-      "\\n" +
-      "Partage (objet, photo, savoir-faire…)\\n" +
-      line("— Description", partageDesc) +
-      line("— Souhait", partageSouhait) +
-      "\\n" +
-      "Envoyé depuis mucam2028.bzh";
-
-    var subject = "Pré-adhésion MuCam2028 — " + prenom + " " + nom;
-    var mailto = "mailto:mucam@postel.bzh"
-               + "?subject=" + encodeURIComponent(subject)
-               + "&body=" + encodeURIComponent(body.replace(/\\n/g, "\\r\\n"));
-
-    // Ouvre la messagerie de l’utilisateur avec le brouillon prêt
-    window.location.href = mailto;
+  const f=document.getElementById('preForm');
+  const b=document.getElementById('submitBtn');
+  const ok=document.getElementById('formSuccess');
+  const ko=document.getElementById('formError');
+  function show(e){e.classList.remove('hidden')}
+  function hide(e){e.classList.add('hidden')}
+  f.addEventListener('submit',async function(e){
+    e.preventDefault(); hide(ok); hide(ko);
+    if(!document.getElementById('nom').value.trim()||!document.getElementById('prenom').value.trim()||!document.getElementById('email').value.trim()){show(ko);return}
+    b.disabled=true;
+    try{
+      const fd=new FormData(f);
+      fd.append('_replyto',document.getElementById('email').value.trim());
+      const r=await fetch(f.action,{method:'POST',body:fd,headers:{'Accept':'application/json'}});
+      if(r.ok){f.reset();show(ok)}else{show(ko)}
+    }catch(_){show(ko)}
+    finally{b.disabled=false}
   });
 })();
 </script>
