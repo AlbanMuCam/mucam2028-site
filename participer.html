@@ -13,7 +13,26 @@
 <link rel="manifest" href="/assets/site.webmanifest">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/participer.html">
-<meta name="description" content="Participer au futur MuCam : adhérer, donner/mécéner, devenir bénévole, consulter les documents.">
+<meta name="description" content="Participer au futur MuCam : pré-adhérer en ligne, donner/mécéner, devenir bénévole.">
+
+<!-- Style léger spécifique au formulaire -->
+<style>
+/* Mise en forme douce du formulaire sans toucher au style global */
+.form-card{margin-top:1.25rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem 1rem}
+.form-grid .full{grid-column:1 / -1}
+fieldset{border:1px solid #eee;border-radius:12px;padding:0.9rem}
+legend{font-weight:700;padding:0 .3rem}
+label{display:block;margin:.35rem 0}
+input[type="text"],input[type="email"],input[type="tel"],textarea{
+  width:100%;padding:.6rem .7rem;border:1px solid #d0d7de;border-radius:10px;font:inherit
+}
+textarea{min-height:110px;resize:vertical}
+.help{font-size:.92rem;color:#666;margin:.4rem 0 0}
+.required::after{content:" *";color:#c0392b}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
+@media (max-width:720px){.form-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <header>
@@ -40,23 +59,135 @@
       <div class="card">
         <h3>Adhérer</h3>
         <p>Rejoignez l’association MuCam2028.</p>
-        <a class="btn" href="mailto:mucam@postel.bzh?subject=Adhésion%20MuCam2028">Demander un bulletin</a>
+        <div class="btns">
+          <a class="btn primary" href="#pre-adhesion">Pré-adhérer en ligne</a>
+          <a class="btn" href="mailto:mucam@postel.bzh?subject=Adh%C3%A9sion%20MuCam2028">Demander un bulletin</a>
+        </div>
       </div>
 
       <div class="card">
         <h3>Soutenir</h3>
-        <p>Vous êtes un particulier ou une entreprise et souhaitez contribuez financièrement au projet.</p>
-        <a class="btn" href="mailto:mucam@postel.bzh?subject=Don%20ou%20mécénat%20MuCam">Contactez-nous !</a>
+        <p>Vous êtes un particulier ou une entreprise et souhaitez contribuer financièrement au projet.</p>
+        <a class="btn" href="mailto:mucam@postel.bzh?subject=Don%20ou%20m%C3%A9c%C3%A9nat%20MuCam">Contactez-nous&nbsp;!</a>
       </div>
 
       <div class="card">
         <h3>Devenir bénévole</h3>
         <p>Accueil, médiation, chantiers participatifs, collecte d’archives et d’objets.</p>
-        <a class="btn" href="mailto:mucam@postel.bzh?subject=Bénévolat%20MuCam">Proposer mon aide</a>
-      </div>
-
+        <a class="btn" href="mailto:mucam@postel.bzh?subject=B%C3%A9n%C3%A9volat%20MuCam">Proposer mon aide</a>
       </div>
     </div>
+
+    <!-- FORMULAIRE DE PRE-ADHESION -->
+    <h2 id="pre-adhesion" style="margin-top:2rem">Pré-adhésion en ligne</h2>
+    <div class="card form-card">
+      <p class="muted">Envoi par e-mail&nbsp;: un brouillon s’ouvrira dans votre messagerie avec vos réponses préremplies, adressé à <strong>mucam@postel.bzh</strong>.</p>
+
+      <form id="preForm">
+        <div class="form-grid">
+          <!-- Coordonnées -->
+          <div class="full"><h3>Coordonnées</h3></div>
+          <div>
+            <label for="nom" class="required">Nom</label>
+            <input type="text" id="nom" name="Nom" required>
+          </div>
+          <div>
+            <label for="prenom" class="required">Prénom</label>
+            <input type="text" id="prenom" name="Prénom" required>
+          </div>
+          <div class="full">
+            <label for="adresse">Adresse postale</label>
+            <input type="text" id="adresse" name="Adresse postale" placeholder="">
+          </div>
+          <div>
+            <label for="email" class="required">Adresse e-mail</label>
+            <input type="email" id="email" name="E-mail" required>
+          </div>
+          <div>
+            <label for="tel">Téléphone (facultatif)</label>
+            <input type="tel" id="tel" name="Téléphone">
+          </div>
+
+          <!-- Souhaits principaux -->
+          <div class="full">
+            <fieldset>
+              <legend>Souhaitez-vous</legend>
+              <label><input type="checkbox" name="Souhaits" value="Adhérer à l’association MuCam 2028 (adhésion à prix libre)"> Adhérer à l’association MuCam 2028 (adhésion à prix libre)</label>
+              <label><input type="checkbox" name="Souhaits" value="Être tenu·e informé·e des avancées du projet"> Être tenu·e informé·e des avancées du projet</label>
+              <label><input type="checkbox" name="Souhaits" value="Participer à un ou plusieurs groupes de travail"> Participer à un ou plusieurs groupes de travail</label>
+            </fieldset>
+          </div>
+
+          <!-- Mode de communication -->
+          <div class="full">
+            <fieldset>
+              <legend>Mode de communication préféré</legend>
+              <label><input type="checkbox" name="Communication" value="E-mail"> E-mail</label>
+              <label><input type="checkbox" name="Communication" value="Téléphone/SMS"> Téléphone/SMS</label>
+              <label><input type="checkbox" name="Communication" value="Courrier papier"> Courrier papier</label>
+            </fieldset>
+          </div>
+
+          <!-- Groupes de travail -->
+          <div class="full">
+            <fieldset>
+              <legend>Groupes de travail (cochez une ou plusieurs cases)</legend>
+              <label><input type="checkbox" name="Groupes" value="Pêche et vie maritime"> Pêche et vie maritime</label>
+              <label><input type="checkbox" name="Groupes" value="Mémoire ouvrière et chantiers navals"> Mémoire ouvrière et chantiers navals</label>
+              <label><input type="checkbox" name="Groupes" value="Patrimoine religieux et symbolique"> Patrimoine religieux et symbolique</label>
+              <label><input type="checkbox" name="Groupes" value="Vauban, défense, histoire militaire"> Vauban, défense, histoire militaire</label>
+              <label><input type="checkbox" name="Groupes" value="Patrimoine immatériel : langues, musiques, danses"> Patrimoine immatériel : langues, musiques, danses</label>
+              <label><input type="checkbox" name="Groupes" value="Témoignages d’habitant·es"> Témoignages d’habitant·es</label>
+              <label><input type="checkbox" name="Groupes" value="Scénographie, architecture et aménagement du futur musée"> Scénographie, architecture et aménagement du futur musée</label>
+              <label><input type="checkbox" name="Groupes" value="Collecte (récits, objets, documents)"> Collecte (récits, objets, documents)</label>
+              <label><input type="checkbox" name="Groupes" value="Actions culturelles et médiation"> Actions culturelles et médiation</label>
+              <label><input type="checkbox" name="Groupes" value="Communication et mobilisation"> Communication et mobilisation</label>
+              <label><input type="checkbox" name="Groupes" value="Modèle coopératif et gouvernance"> Modèle coopératif et gouvernance</label>
+            </fieldset>
+          </div>
+
+          <!-- Campagne citoyenne -->
+          <div class="full">
+            <fieldset>
+              <legend>Campagne citoyenne pour l’achat de la parcelle</legend>
+              <label><input type="checkbox" name="Campagne citoyenne" value="Faire un don (recontact souhaité)"> Faire un don (vous serez recontacté·e)</label>
+              <label><input type="checkbox" name="Campagne citoyenne" value="Participer à la mobilisation citoyenne (tracts, affiches, relais…)"> Participer à la mobilisation citoyenne (tracts, affiches, relais…)</label>
+              <label><input type="checkbox" name="Campagne citoyenne" value="Faire connaître le projet"> Faire connaître le projet</label>
+              <label><input type="checkbox" name="Campagne citoyenne" value="Rejoindre un groupe de bénévoles pour organiser des événements de soutien"> Rejoindre un groupe de bénévoles pour organiser des événements de soutien</label>
+            </fieldset>
+          </div>
+
+          <!-- Partage d’objet / témoignage -->
+          <div class="full">
+            <fieldset>
+              <legend>Partage (objet, photo, souvenir, savoir-faire…)</legend>
+              <label for="partage-desc">Décrivez ce que vous souhaitez partager (facultatif)</label>
+              <textarea id="partage-desc" name="Partage — description"></textarea>
+              <div class="btn-row" style="margin-top:.4rem">
+                <label><input type="checkbox" name="Partage — souhait" value="Prêt pour exposition"> Le prêter pour une exposition</label>
+                <label><input type="checkbox" name="Partage — souhait" value="Don au futur musée"> Le donner au futur musée</label>
+                <label><input type="checkbox" name="Partage — souhait" value="Faire connaître (sans engagement)"> Le faire connaître (sans engagement)</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="full btn-row">
+            <button type="submit" class="btn primary">Envoyer ma pré-adhésion</button>
+            <button type="reset" class="btn">Effacer</button>
+          </div>
+          <div class="full">
+            <p class="help">* Champs obligatoires. Aucune donnée n’est stockée sur le site&nbsp;: vos réponses sont envoyées par e-mail à <strong>mucam@postel.bzh</strong>.</p>
+          </div>
+        </div>
+      </form>
+
+      <noscript>
+        <p class="help">JavaScript est désactivé. Envoyez vos réponses à
+          <a href="mailto:mucam@postel.bzh?subject=Pr%C3%A9-adh%C3%A9sion%20MuCam2028">mucam@postel.bzh</a>.
+        </p>
+      </noscript>
+    </div>
+    <!-- /FORMULAIRE -->
   </div>
 </main>
 
@@ -73,5 +204,73 @@
     </div>
   </div>
 </footer>
+
+<!-- Script : construit un e-mail prérempli vers mucam@postel.bzh -->
+<script>
+(function(){
+  function getCheckedValues(name){
+    return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(i=>i.value);
+  }
+  function line(label, value){
+    if(!value || (Array.isArray(value) && value.length===0)) return "";
+    if(Array.isArray(value)) value = value.join(", ");
+    return label + ": " + value + "\\n";
+  }
+
+  document.getElementById('preForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // Champs requis simples
+    var nom = document.getElementById('nom').value.trim();
+    var prenom = document.getElementById('prenom').value.trim();
+    var email = document.getElementById('email').value.trim();
+    if(!nom || !prenom || !email){
+      alert("Merci de renseigner au minimum Nom, Prénom et E-mail.");
+      return;
+    }
+
+    // Récupération des valeurs
+    var adresse = document.getElementById('adresse').value.trim();
+    var tel = document.getElementById('tel').value.trim();
+    var souhaits = getCheckedValues("Souhaits");
+    var comm = getCheckedValues("Communication");
+    var groupes = getCheckedValues("Groupes");
+    var camp = getCheckedValues("Campagne citoyenne");
+    var partageDesc = document.getElementById('partage-desc').value.trim();
+    var partageSouhait = getCheckedValues("Partage — souhait");
+
+    // Corps de l’e-mail
+    var body =
+      "Pré-adhésion en ligne — MuCam2028\\n" +
+      "----------------------------------\\n" +
+      line("Nom", nom) +
+      line("Prénom", prenom) +
+      line("E-mail", email) +
+      line("Téléphone", tel) +
+      line("Adresse postale", adresse) +
+      "\\n" +
+      line("Souhaitez-vous", souhaits) +
+      line("Mode de communication préféré", comm) +
+      line("Groupes de travail", groupes) +
+      "\\n" +
+      "Campagne citoyenne pour l’achat de la parcelle\\n" +
+      line("— Engagement", camp) +
+      "\\n" +
+      "Partage (objet, photo, savoir-faire…)\\n" +
+      line("— Description", partageDesc) +
+      line("— Souhait", partageSouhait) +
+      "\\n" +
+      "Envoyé depuis mucam2028.bzh";
+
+    var subject = "Pré-adhésion MuCam2028 — " + prenom + " " + nom;
+    var mailto = "mailto:mucam@postel.bzh"
+               + "?subject=" + encodeURIComponent(subject)
+               + "&body=" + encodeURIComponent(body.replace(/\\n/g, "\\r\\n"));
+
+    // Ouvre la messagerie de l’utilisateur avec le brouillon prêt
+    window.location.href = mailto;
+  });
+})();
+</script>
 </body>
 </html>
