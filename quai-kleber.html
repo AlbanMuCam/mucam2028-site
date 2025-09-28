@@ -11,6 +11,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/assets/site.webmanifest">
+<meta name="theme-color" content="#8a2d07">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/quai-kleber.html">
 <meta name="description" content="15–16 quai Kléber : une parcelle à très forte valeur patrimoniale, témoin continu des activités portuaires de Camaret-sur-Mer depuis le XVIIIe siècle.">
@@ -56,7 +57,6 @@
       <li>Activité encore en place aujourd'hui: local commercial d'artisanat d'art et musée du patrimoine maritime. La mairie de Camaret-sur-Mer, propriétaire de la Salle de Venise, et l'association MAISON DU PATRIMOINE - CAMARET SUR MER qui l'occupe ont été consultées et ne sont pas partenaires du projet du MuCam à ce stade. </li>
     </ul>
 
-  
     <figure style="margin:1rem 0;">
       <img src="/assets/img/ArmandPeugeot1885.GIF" alt="« Environs de Morgat, Camaret », Armand Peugeot, 1885" loading="lazy">
       <figcaption class="muted">« Environs de Morgat, Camaret », Armand Peugeot, 1885</figcaption>
@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', async function(){
   const mapEl = document.getElementById('map');
   if (!mapEl || typeof L === 'undefined') return;
 
-  // 1) Carte de base
   const map = L.map('map', { scrollWheelZoom: true });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
@@ -112,11 +111,9 @@ document.addEventListener('DOMContentLoaded', async function(){
   }).addTo(map);
   map.setView([48.275235, -4.594136], 19);
 
-  // 2) Pane dédié pour que la surbrillance reste au-dessus
   map.createPane('highlight');
   map.getPane('highlight').style.zIndex = 650;
 
-  // 3) IDs OSM + requête Overpass (géométrie complète)
   const ids = [53972202, 53972256];
   const query = `
     [out:json][timeout:35];
@@ -126,7 +123,6 @@ document.addEventListener('DOMContentLoaded', async function(){
     out tags geom;
   `;
 
-  // 4) Fallback multi-endpoints + petites relances
   const endpoints = [
     'https://overpass.kumi.systems/api/interpreter',
     'https://overpass-api.de/api/interpreter'
@@ -145,7 +141,6 @@ document.addEventListener('DOMContentLoaded', async function(){
           throw new Error('Réponse Overpass vide');
         } catch (e) {
           lastErr = e;
-          // petit backoff avant de réessayer
           await new Promise(r => setTimeout(r, 600 * (attempt + 1)));
         }
       }
@@ -161,13 +156,12 @@ document.addEventListener('DOMContentLoaded', async function(){
       if (el.type === 'way' && Array.isArray(el.geometry)) {
         const latlngs = el.geometry.map(pt => [pt.lat, pt.lon]);
 
-        // Surbrillance visible (orange)
         const poly = L.polygon(latlngs, {
           pane: 'highlight',
-          color: '#ff6b00',      // contour
+          color: '#ff6b00',
           weight: 4,
           opacity: 1,
-          fillColor: '#ff6b00',  // remplissage
+          fillColor: '#ff6b00',
           fillOpacity: 0.35
         }).addTo(group);
 
@@ -184,7 +178,6 @@ document.addEventListener('DOMContentLoaded', async function(){
         const llb = L.latLngBounds(latlngs);
         bounds = bounds ? bounds.extend(llb) : llb;
 
-        // priorité d’affichage
         setTimeout(() => poly.bringToFront(), 0);
       }
     });
