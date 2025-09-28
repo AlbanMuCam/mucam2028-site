@@ -80,7 +80,7 @@ textarea{min-height:110px;resize:vertical}
 
     <h2 id="pre-adhesion" style="margin-top:2rem">Pré-adhésion en ligne</h2>
     <div class="card form-card">
-      <p class="muted">Vos réponses sont envoyées et transmises par e-mail à <strong>mucam@postel.bzh</strong>.</p>
+      <p class="muted"><strong>Préadhésion (avant constitution de l’association)</strong> : ce formulaire recueille une intention d’adhérer. Il ne vaut pas adhésion et n’entraîne aucun paiement. Nous vous recontacterons lors de la création officielle pour confirmer l’adhésion. Vos réponses sont transmises à <strong>mucam@postel.bzh</strong>.</p>
 
       <form id="preForm" action="https://formspree.io/f/xwprvzop" method="POST" novalidate>
         <input type="hidden" name="_subject" value="Pré-adhésion MuCam2028">
@@ -168,6 +168,11 @@ textarea{min-height:110px;resize:vertical}
             </fieldset>
           </div>
 
+          <div class="full">
+            <label><input type="checkbox" id="consent" name="Consentement RGPD" value="J’accepte d’être recontacté·e au sujet du projet MuCam2028" required> J’accepte que mes données soient utilisées pour me recontacter au sujet du projet MuCam2028.</label>
+            <p class="help">Vous pourrez demander la suppression de vos données à tout moment : mucam@postel.bzh</p>
+          </div>
+
           <div class="full btn-row">
             <button type="submit" class="btn primary" id="submitBtn">Envoyer ma pré-adhésion</button>
             <button type="reset" class="btn">Effacer</button>
@@ -214,7 +219,7 @@ textarea{min-height:110px;resize:vertical}
   function hide(e){e.classList.add('hidden')}
   f.addEventListener('submit',async function(e){
     e.preventDefault(); hide(ok); hide(ko);
-    if(!document.getElementById('nom').value.trim()||!document.getElementById('prenom').value.trim()||!document.getElementById('email').value.trim()){show(ko);return}
+    if(!document.getElementById('nom').value.trim()||!document.getElementById('prenom').value.trim()||!document.getElementById('email').value.trim()||!document.getElementById('consent').checked){show(ko);return}
     b.disabled=true;
     try{
       const fd=new FormData(f);
