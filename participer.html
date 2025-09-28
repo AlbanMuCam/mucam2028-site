@@ -31,6 +31,8 @@ textarea{min-height:110px;resize:vertical}
 .alert.error{background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d}
 .hidden{display:none}
 .hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+.collapse{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .3s ease,margin .3s ease;margin-top:0}
+.collapse.open{max-height:4000px;opacity:1;margin-top:1.25rem}
 @media (max-width:720px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -60,7 +62,7 @@ textarea{min-height:110px;resize:vertical}
         <h3>Adhérer</h3>
         <p>Rejoignez l’association MuCam2028.</p>
         <div class="btns">
-          <a class="btn primary" href="#pre-adhesion">Pré-adhérer en ligne</a>
+          <a class="btn primary" href="#pre-adhesion" id="toggleFormBtn" aria-expanded="false">Pré-adhérer en ligne</a>
           <a class="btn" href="mailto:mucam@postel.bzh?subject=Adh%C3%A9sion%20MuCam2028">Demander un bulletin</a>
         </div>
       </div>
@@ -78,109 +80,110 @@ textarea{min-height:110px;resize:vertical}
       </div>
     </div>
 
-    <h2 id="pre-adhesion" style="margin-top:2rem">Pré-adhésion en ligne</h2>
-    <div class="card form-card">
-      <p class="muted"><strong>Préadhésion (avant constitution de l’association)</strong> : ce formulaire recueille une intention d’adhérer. Il ne vaut pas adhésion et n’entraîne aucun paiement. Nous vous recontacterons lors de la création officielle pour confirmer l’adhésion. Vos réponses sont transmises à <strong>mucam@postel.bzh</strong>.</p>
+    <div id="pre-adhesion" class="collapse" aria-hidden="true">
+      <div class="card form-card">
+        <p class="muted"><strong>Préadhésion (avant constitution de l’association)</strong> : ce formulaire recueille une intention d’adhérer. Il ne vaut pas adhésion et n’entraîne aucun paiement. Nous vous recontacterons lors de la création officielle pour confirmer l’adhésion. Vos réponses sont transmises à <strong>mucam@postel.bzh</strong>.</p>
 
-      <form id="preForm" action="https://formspree.io/f/xwprvzop" method="POST" novalidate>
-        <input type="hidden" name="_subject" value="Pré-adhésion MuCam2028">
-        <input type="hidden" name="_language" value="fr">
-        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off">
+        <form id="preForm" action="https://formspree.io/f/xwprvzop" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="Pré-adhésion MuCam2028">
+          <input type="hidden" name="_language" value="fr">
+          <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off">
 
-        <div class="form-grid">
-          <div class="full"><h3>Coordonnées</h3></div>
-          <div>
-            <label for="nom" class="required">Nom</label>
-            <input type="text" id="nom" name="Nom" required>
-          </div>
-          <div>
-            <label for="prenom" class="required">Prénom</label>
-            <input type="text" id="prenom" name="Prénom" required>
-          </div>
-          <div class="full">
-            <label for="adresse">Adresse postale</label>
-            <input type="text" id="adresse" name="Adresse postale">
-          </div>
-          <div>
-            <label for="email" class="required">Adresse e-mail</label>
-            <input type="email" id="email" name="E-mail" required>
-          </div>
-          <div>
-            <label for="tel">Téléphone (facultatif)</label>
-            <input type="tel" id="tel" name="Téléphone">
-          </div>
+          <div class="form-grid">
+            <div class="full"><h3>Coordonnées</h3></div>
+            <div>
+              <label for="nom" class="required">Nom</label>
+              <input type="text" id="nom" name="Nom" required>
+            </div>
+            <div>
+              <label for="prenom" class="required">Prénom</label>
+              <input type="text" id="prenom" name="Prénom" required>
+            </div>
+            <div class="full">
+              <label for="adresse">Adresse postale</label>
+              <input type="text" id="adresse" name="Adresse postale">
+            </div>
+            <div>
+              <label for="email" class="required">Adresse e-mail</label>
+              <input type="email" id="email" name="E-mail" required>
+            </div>
+            <div>
+              <label for="tel">Téléphone (facultatif)</label>
+              <input type="tel" id="tel" name="Téléphone">
+            </div>
 
-          <div class="full">
-            <fieldset>
-              <legend>Souhaitez-vous</legend>
-              <label><input type="checkbox" name="Souhaits" value="Adhérer à l’association MuCam 2028 (adhésion à prix libre)"> Adhérer à l’association MuCam 2028 (adhésion à prix libre)</label>
-              <label><input type="checkbox" name="Souhaits" value="Être tenu·e informé·e des avancées du projet"> Être tenu·e informé·e des avancées du projet</label>
-              <label><input type="checkbox" name="Souhaits" value="Participer à un ou plusieurs groupes de travail"> Participer à un ou plusieurs groupes de travail</label>
-            </fieldset>
-          </div>
+            <div class="full">
+              <fieldset>
+                <legend>Souhaitez-vous</legend>
+                <label><input type="checkbox" name="Souhaits" value="Adhérer à l’association MuCam 2028 (adhésion à prix libre)"> Adhérer à l’association MuCam 2028 (adhésion à prix libre)</label>
+                <label><input type="checkbox" name="Souhaits" value="Être tenu·e informé·e des avancées du projet"> Être tenu·e informé·e des avancées du projet</label>
+                <label><input type="checkbox" name="Souhaits" value="Participer à un ou plusieurs groupes de travail"> Participer à un ou plusieurs groupes de travail</label>
+              </fieldset>
+            </div>
 
-          <div class="full">
-            <fieldset>
-              <legend>Mode de communication préféré</legend>
-              <label><input type="checkbox" name="Communication" value="E-mail"> E-mail</label>
-              <label><input type="checkbox" name="Communication" value="Téléphone/SMS"> Téléphone/SMS</label>
-              <label><input type="checkbox" name="Communication" value="Courrier papier"> Courrier papier</label>
-            </fieldset>
-          </div>
+            <div class="full">
+              <fieldset>
+                <legend>Mode de communication préféré</legend>
+                <label><input type="checkbox" name="Communication" value="E-mail"> E-mail</label>
+                <label><input type="checkbox" name="Communication" value="Téléphone/SMS"> Téléphone/SMS</label>
+                <label><input type="checkbox" name="Communication" value="Courrier papier"> Courrier papier</label>
+              </fieldset>
+            </div>
 
-          <div class="full">
-            <fieldset>
-              <legend>Groupes de travail (cochez une ou plusieurs cases)</legend>
-              <label><input type="checkbox" name="Groupes" value="Pêche et vie maritime"> Pêche et vie maritime</label>
-              <label><input type="checkbox" name="Groupes" value="Mémoire ouvrière et chantiers navals"> Mémoire ouvrière et chantiers navals</label>
-              <label><input type="checkbox" name="Groupes" value="Patrimoine religieux et symbolique"> Patrimoine religieux et symbolique</label>
-              <label><input type="checkbox" name="Groupes" value="Vauban, défense, histoire militaire"> Vauban, défense, histoire militaire</label>
-              <label><input type="checkbox" name="Groupes" value="Patrimoine immatériel : langues, musiques, danses"> Patrimoine immatériel : langues, musiques, danses</label>
-              <label><input type="checkbox" name="Groupes" value="Témoignages d’habitant·es"> Témoignages d’habitant·es</label>
-              <label><input type="checkbox" name="Groupes" value="Scénographie, architecture et aménagement du futur musée"> Scénographie, architecture et aménagement du futur musée</label>
-              <label><input type="checkbox" name="Groupes" value="Collecte (récits, objets, documents)"> Collecte (récits, objets, documents)</label>
-              <label><input type="checkbox" name="Groupes" value="Actions culturelles et médiation"> Actions culturelles et médiation</label>
-              <label><input type="checkbox" name="Groupes" value="Communication et mobilisation"> Communication et mobilisation</label>
-              <label><input type="checkbox" name="Groupes" value="Modèle coopératif et gouvernance"> Modèle coopératif et gouvernance</label>
-            </fieldset>
-          </div>
+            <div class="full">
+              <fieldset>
+                <legend>Groupes de travail (cochez une ou plusieurs cases)</legend>
+                <label><input type="checkbox" name="Groupes" value="Pêche et vie maritime"> Pêche et vie maritime</label>
+                <label><input type="checkbox" name="Groupes" value="Mémoire ouvrière et chantiers navals"> Mémoire ouvrière et chantiers navals</label>
+                <label><input type="checkbox" name="Groupes" value="Patrimoine religieux et symbolique"> Patrimoine religieux et symbolique</label>
+                <label><input type="checkbox" name="Groupes" value="Vauban, défense, histoire militaire"> Vauban, défense, histoire militaire</label>
+                <label><input type="checkbox" name="Groupes" value="Patrimoine immatériel : langues, musiques, danses"> Patrimoine immatériel : langues, musiques, danses</label>
+                <label><input type="checkbox" name="Groupes" value="Témoignages d’habitant·es"> Témoignages d’habitant·es</label>
+                <label><input type="checkbox" name="Groupes" value="Scénographie, architecture et aménagement du futur musée"> Scénographie, architecture et aménagement du futur musée</label>
+                <label><input type="checkbox" name="Groupes" value="Collecte (récits, objets, documents)"> Collecte (récits, objets, documents)</label>
+                <label><input type="checkbox" name="Groupes" value="Actions culturelles et médiation"> Actions culturelles et médiation</label>
+                <label><input type="checkbox" name="Groupes" value="Communication et mobilisation"> Communication et mobilisation</label>
+                <label><input type="checkbox" name="Groupes" value="Modèle coopératif et gouvernance"> Modèle coopératif et gouvernance</label>
+              </fieldset>
+            </div>
 
-          <div class="full">
-            <fieldset>
-              <legend>Partager un objet, une image ou un témoignage</legend>
-              <label for="partage-desc">Que souhaitez-vous partager ? (description brève : nature, histoire, lien avec Camaret)</label>
-              <textarea id="partage-desc" name="Partage — description"></textarea>
-              <div class="btn-row" style="margin-top:.4rem">
-                <label><input type="checkbox" name="Partage — souhait" value="Prêt pour exposition (contact souhaité)"> Prêt pour exposition</label>
-                <label><input type="checkbox" name="Partage — souhait" value="Don au futur musée (à étudier)"> Don au futur musée</label>
-                <label><input type="checkbox" name="Partage — souhait" value="Mise en relation / documentation (sans engagement)"> Mise en relation / documentation (sans engagement)</label>
-              </div>
-            </fieldset>
-          </div>
+            <div class="full">
+              <fieldset>
+                <legend>Partager un objet, une image ou un témoignage</legend>
+                <label for="partage-desc">Que souhaitez-vous partager ? (description brève : nature, histoire, lien avec Camaret)</label>
+                <textarea id="partage-desc" name="Partage — description"></textarea>
+                <div class="btn-row" style="margin-top:.4rem">
+                  <label><input type="checkbox" name="Partage — souhait" value="Prêt pour exposition (contact souhaité)"> Prêt pour exposition</label>
+                  <label><input type="checkbox" name="Partage — souhait" value="Don au futur musée (à étudier)"> Don au futur musée</label>
+                  <label><input type="checkbox" name="Partage — souhait" value="Mise en relation / documentation (sans engagement)"> Mise en relation / documentation (sans engagement)</label>
+                </div>
+              </fieldset>
+            </div>
 
-          <div class="full">
-            <label><input type="checkbox" id="consent" name="Consentement RGPD" value="J’accepte d’être recontacté·e au sujet du projet MuCam2028" required> J’accepte que mes données soient utilisées pour me recontacter au sujet du projet MuCam2028.</label>
-            <p class="help">Vous pourrez demander la suppression de vos données à tout moment : mucam@postel.bzh</p>
-          </div>
+            <div class="full">
+              <label><input type="checkbox" id="consent" name="Consentement RGPD" value="J’accepte d’être recontacté·e au sujet du projet MuCam2028" required> J’accepte que mes données soient utilisées pour me recontacter au sujet du projet MuCam2028.</label>
+              <p class="help">Vous pourrez demander la suppression de vos données à tout moment : mucam@postel.bzh</p>
+            </div>
 
-          <div class="full btn-row">
-            <button type="submit" class="btn primary" id="submitBtn">Envoyer ma pré-adhésion</button>
-            <button type="reset" class="btn">Effacer</button>
-          </div>
+            <div class="full btn-row">
+              <button type="submit" class="btn primary" id="submitBtn">Envoyer ma pré-adhésion</button>
+              <button type="reset" class="btn">Effacer</button>
+            </div>
 
-          <div class="full">
-            <div id="formSuccess" class="alert success hidden" role="status">Merci ! Votre pré-adhésion a bien été envoyée.</div>
-            <div id="formError" class="alert error hidden" role="alert">L’envoi a échoué. Vérifiez votre connexion et réessayez.</div>
-            <p class="help">* Champs obligatoires. Données traitées par l’équipe du projet MuCam2028.</p>
+            <div class="full">
+              <div id="formSuccess" class="alert success hidden" role="status">Merci ! Votre pré-adhésion a bien été envoyée.</div>
+              <div id="formError" class="alert error hidden" role="alert">L’envoi a échoué. Vérifiez votre connexion et réessayez.</div>
+              <p class="help">* Champs obligatoires. Données traitées par l’équipe du projet MuCam2028.</p>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <noscript>
-        <p class="help">JavaScript est désactivé. Vous pouvez écrire à
-          <a href="mailto:mucam@postel.bzh?subject=Pr%C3%A9-adh%C3%A9sion%20MuCam2028">mucam@postel.bzh</a>.
-        </p>
-      </noscript>
+        <noscript>
+          <p class="help">JavaScript est désactivé. Vous pouvez écrire à
+            <a href="mailto:mucam@postel.bzh?subject=Pr%C3%A9-adh%C3%A9sion%20MuCam2028">mucam@postel.bzh</a>.
+          </p>
+        </noscript>
+      </div>
     </div>
   </div>
 </main>
@@ -189,7 +192,7 @@ textarea{min-height:110px;resize:vertical}
   <div class="container footer-grid">
     <div>
       <strong>MuCam — Musée des patrimoines de Camaret-sur-Mer</strong><br>
-      Mairie - 1 Pl. d'Estienne d'Orves 29570 Camaret-sur-Mer<br>
+      15–16 quai Kléber, 29570 Camaret-sur-Mer<br>
       Contact : <a href="mailto:mucam@postel.bzh">mucam@postel.bzh</a>
       <p class="muted">Projet associatif et coopératif au service du territoire. © 2025 MuCam2028.</p>
     </div>
@@ -201,23 +204,30 @@ textarea{min-height:110px;resize:vertical}
 
 <script>
 (function(){
-  const f=document.getElementById('preForm');
-  const b=document.getElementById('submitBtn');
+  const section=document.getElementById('pre-adhesion');
+  const toggle=document.getElementById('toggleFormBtn');
+  const form=document.getElementById('preForm');
+  const submitBtn=document.getElementById('submitBtn');
   const ok=document.getElementById('formSuccess');
   const ko=document.getElementById('formError');
+  function openForm(){section.classList.add('open');section.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true')}
+  function closeForm(){section.classList.remove('open');section.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false')}
+  function toggleForm(e){e.preventDefault();if(section.classList.contains('open')){closeForm()}else{openForm();setTimeout(()=>{const f=document.getElementById('nom');if(f)f.focus({preventScroll:true});section.scrollIntoView({behavior:'smooth',block:'start'})},150)}}
+  toggle.addEventListener('click',toggleForm);
+  if(location.hash==='#pre-adhesion'){openForm()}
   function show(e){e.classList.remove('hidden')}
   function hide(e){e.classList.add('hidden')}
-  f.addEventListener('submit',async function(e){
+  form.addEventListener('submit',async function(e){
     e.preventDefault(); hide(ok); hide(ko);
     if(!document.getElementById('nom').value.trim()||!document.getElementById('prenom').value.trim()||!document.getElementById('email').value.trim()||!document.getElementById('consent').checked){show(ko);return}
-    b.disabled=true;
+    submitBtn.disabled=true;
     try{
-      const fd=new FormData(f);
+      const fd=new FormData(form);
       fd.append('_replyto',document.getElementById('email').value.trim());
-      const r=await fetch(f.action,{method:'POST',body:fd,headers:{'Accept':'application/json'}});
-      if(r.ok){f.reset();show(ok)}else{show(ko)}
+      const r=await fetch(form.action,{method:'POST',body:fd,headers:{'Accept':'application/json'}});
+      if(r.ok){form.reset();show(ok)}else{show(ko)}
     }catch(_){show(ko)}
-    finally{b.disabled=false}
+    finally{submitBtn.disabled=false}
   });
 })();
 </script>
