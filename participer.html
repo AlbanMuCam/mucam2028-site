@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#8a2d07">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="canonical" href="https://mucam2028.bzh/participer.html">
-<meta name="description" content="Participer au futur MuCam : pré-adhérer en ligne, donner/mécéner, devenir bénévole.">
+<meta name="description" content="Participer au futur MuCam : Adhérer en ligne, donner/mécéner, devenir bénévole.">
 <style>
 .form-card{margin-top:1.25rem}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem 1rem}
@@ -63,7 +63,7 @@ textarea{min-height:110px;resize:vertical}
         <h3>Adhérer</h3>
         <p>Rejoignez l’association MuCam2028.</p>
         <div class="btns">
-          <a class="btn primary" href="#pre-adhesion" id="toggleFormBtn" aria-expanded="false">Pré-adhérer en ligne</a>
+          <a class="btn primary" href="#pre-adhesion" id="toggleFormBtn" aria-expanded="false">Adhérer en ligne</a>
           <a class="btn" href="mailto:mucam@postel.bzh?subject=Adh%C3%A9sion%20MuCam2028">Demander un bulletin</a>
         </div>
       </div>
@@ -83,10 +83,10 @@ textarea{min-height:110px;resize:vertical}
 
     <div id="pre-adhesion" class="collapse" aria-hidden="true">
       <div class="card form-card">
-        <p class="muted"><strong>Préadhésion (avant constitution de l’association)</strong> : ce formulaire recueille une intention d’adhérer. Il ne vaut pas adhésion et n’entraîne aucun paiement. Nous vous recontacterons lors de la création officielle pour confirmer l’adhésion. Vos réponses sont transmises à <strong>mucam@postel.bzh</strong>.</p>
+        <p class="muted"><strong>Adhésion</strong> : ce formulaire vaut adhésion et n’entraîne aucun paiement. Vos réponses sont transmises à <strong>mucam@postel.bzh</strong>.</p>
 
         <form id="preForm" action="https://formspree.io/f/xwprvzop" method="POST" novalidate>
-          <input type="hidden" name="_subject" value="Pré-adhésion MuCam2028">
+          <input type="hidden" name="_subject" value="Adhésion MuCam2028">
           <input type="hidden" name="_language" value="fr">
           <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off">
 
@@ -116,8 +116,7 @@ textarea{min-height:110px;resize:vertical}
             <div class="full">
               <fieldset>
                 <legend>Souhaitez-vous</legend>
-                <label><input type="checkbox" name="Souhaits" value="Adhérer à l’association MuCam 2028 (adhésion à prix libre)"> Adhérer à l’association MuCam 2028 (adhésion à prix libre)</label>
-                <label><input type="checkbox" name="Souhaits" value="Être tenu·e informé·e des avancées du projet"> Être tenu·e informé·e des avancées du projet</label>
+                <label><input type="checkbox" name="Souhaits" value="Adhérer à l’association MuCam 2028"> Adhérer à l’association MuCam 2028</label>
                 <label><input type="checkbox" name="Souhaits" value="Participer à un ou plusieurs groupes de travail"> Participer à un ou plusieurs groupes de travail</label>
               </fieldset>
             </div>
@@ -133,7 +132,7 @@ textarea{min-height:110px;resize:vertical}
 
             <div class="full">
               <fieldset>
-                <legend>Groupes de travail (cochez une ou plusieurs cases)</legend>
+                <legend>Groupes de travail (facultatif)</legend>
                 <label><input type="checkbox" name="Groupes" value="Pêche et vie maritime"> Pêche et vie maritime</label>
                 <label><input type="checkbox" name="Groupes" value="Mémoire ouvrière et chantiers navals"> Mémoire ouvrière et chantiers navals</label>
                 <label><input type="checkbox" name="Groupes" value="Patrimoine religieux et symbolique"> Patrimoine religieux et symbolique</label>
@@ -150,8 +149,8 @@ textarea{min-height:110px;resize:vertical}
 
             <div class="full">
               <fieldset>
-                <legend>Partager un témoignage ou une description d'objet ou de documents pertinents pour le futur MuCam</legend>
-                <label for="partage-desc">Que souhaitez-vous partager ? (description brève : nature, histoire, lien avec Camaret)</label>
+                <legend>Partager un commentaire, un témoignage ou la description d'objet ou de documents pertinents pour le futur MuCam</legend>
+                <label for="partage-desc">Que souhaitez-vous partager ?</label>
                 <textarea id="partage-desc" name="Partage — description"></textarea>
                 <div class="btn-row" style="margin-top:.4rem">
                   <label><input type="checkbox" name="Partage — souhait" value="Prêt pour exposition (contact souhaité)"> Prêt pour exposition</label>
@@ -172,7 +171,7 @@ textarea{min-height:110px;resize:vertical}
             </div>
 
             <div class="full">
-              <div id="formSuccess" class="alert success hidden" role="status">Merci ! Votre pré-adhésion a bien été envoyée.</div>
+              <div id="formSuccess" class="alert success hidden" role="status">Merci ! Votre adhésion à l'association de préfiguration du MuCam a bien été prise en compte.</div>
               <div id="formError" class="alert error hidden" role="alert">L’envoi a échoué. Vérifiez votre connexion et réessayez.</div>
               <p class="help">* Champs obligatoires. Données traitées par l’équipe du projet MuCam2028.</p>
             </div>
